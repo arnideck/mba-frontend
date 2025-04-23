@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to AWS S3
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout 
         uses: actions/checkout@v3
 
       - name: Setup Node.js ⚙️
@@ -18,16 +18,20 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          
+
       - name: Install dependencies 📦
         run: npm ci
-        
-      - name: Build 🔧
+
+      - name: Build project 🔧
         run: npm run build
-        
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+
+      - name: Deploy to S3 🪣
+        uses: jakejarvis/s3-sync-action@master
         with:
-          folder: dist
-          branch: gh-pages
-          clean: true
+          args: --acl public-read --delete
+        env:
+          AWS_S3_BUCKET: mba-frontend-deploy
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+          SOURCE_DIR: ./dist
