@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-// URL base da API - substitua pela URL real da sua API
-const API_URL = process.env.VUE_APP_API_URL || 'https://api.exemplo.com';
+// URL base da API - já considerando stage $default (sem sufixo adicional)
+const API_URL = 'https://sylynh41y9.execute-api.us-east-1.amazonaws.com/';
 
-// Token JWT para autenticação
+// Token JWT para autenticação (não está ativo ainda, mas estrutura permanece)
 const getToken = () => localStorage.getItem('jwt_token');
 
-// Instância do axios com configurações padrão
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
@@ -15,7 +14,7 @@ const apiClient = axios.create({
   }
 });
 
-// Interceptor para adicionar token de autenticação em cada requisição
+// Adiciona o token, se existir
 apiClient.interceptors.request.use(
   config => {
     const token = getToken();
@@ -27,30 +26,9 @@ apiClient.interceptors.request.use(
   error => Promise.reject(error)
 );
 
-// Serviço de API
+// Envia uma pergunta para o backend (Lambda)
 export default {
-  // Autenticação
-  login(credentials) {
-    return apiClient.post('/auth/login', credentials);
-  },
-  
-  logout() {
-    localStorage.removeItem('jwt_token');
-    return Promise.resolve();
-  },
-  
-  // Enviar pergunta para o agente de BI conversacional
   sendQuestion(question) {
-    return apiClient.post('/agent/query', { question });
-  },
-  
-  // Obter histórico de consultas
-  getQueryHistory() {
-    return apiClient.get('/agent/history');
-  },
-  
-  // Verificar status da API
-  checkStatus() {
-    return apiClient.get('/status');
+    return apiClient.post('/agent', { question });
   }
 };
