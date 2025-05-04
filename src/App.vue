@@ -23,7 +23,7 @@ import ChatInput from './components/ChatInput.vue';
 import api from './services/api.js';
 
 // Token JWT gerado manualmente (deve estar alinhado com o JWT_SECRET do backend)
-const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiZnJvbnRlbmQtZGV2IiwiaWF0IjoxNjk2NzI1NjAwLCJleHAiOjE3MDAzMjU2MDB9.9A3xD8np8oG_VU9h0rN9A9zM0EtJoSxSgVZsIvs8ljk';
+const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiZnJvbnRlbmQtZGV2IiwiaWF0IjoxNzE0NzE3NzYyLCJleHAiOjE3MTUzMjI1NjJ9.WA0ZVxXLtdCrZs2nHkFzN1a_AuYdYwEOOt6wH4TnKx4';
 localStorage.setItem('jwt_token', jwtToken);
 
 const resposta = ref('');
