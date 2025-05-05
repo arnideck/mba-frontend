@@ -12,6 +12,8 @@
       <div v-if="resposta" class="mt-6 p-4 bg-white shadow rounded border border-gray-200">
         <p class="text-lg font-semibold mb-2">Resposta:</p>
         <p class="text-gray-800">{{ resposta }}</p>
+        <p class="text-lg font-semibold mb-2">Raciocínio:</p>
+        <p class="text-gray-800">{{ raciocinio }}</p>
       </div>
     </main>
   </div>
@@ -27,14 +29,18 @@ const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiZnJvbnRlb
 localStorage.setItem('jwt_token', jwtToken);
 
 const resposta = ref('');
+const raciocinio = ref('');
 
 const fazerPergunta = async (pergunta) => {
   resposta.value = 'Carregando...';
+  raciocinio.value = '';
   try {
     const { data } = await api.sendQuestion(pergunta);
     resposta.value = data.resposta || 'Nenhuma resposta retornada.';
-  } catch (err) {
+    raciocinio.value = data.raciocinio || 'Nenhum raciocínio retornado.';
+    } catch (err) {
     resposta.value = 'Erro ao buscar resposta.';
+    raciocinio.value = '';
     console.error('Erro:', err);
   }
 };
