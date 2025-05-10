@@ -1,9 +1,6 @@
 import axios from 'axios';
 
-// URL base da API - já considerando stage $default (sem sufixo adicional)
 const API_URL = 'https://sylynh41y9.execute-api.us-east-1.amazonaws.com/';
-
-// Token JWT para autenticação (não está ativo ainda, mas estrutura permanece)
 const getToken = () => localStorage.getItem('jwt_token');
 
 const apiClient = axios.create({
@@ -14,7 +11,6 @@ const apiClient = axios.create({
   }
 });
 
-// Adiciona o token, se existir
 apiClient.interceptors.request.use(
   config => {
     const token = getToken();
@@ -26,9 +22,32 @@ apiClient.interceptors.request.use(
   error => Promise.reject(error)
 );
 
-// Envia uma pergunta para o backend (Lambda)
-export default {
-  sendQuestion(question) {
-    return apiClient.post('/agent', { question });
+// Novo método: pergunta → resposta + tabela (se houver)
+export async function perguntar(pergunta) {
+  try {
+    const response = await apiClient.post('/agent', { question: pergunta });
+    const { resposta, raciocinio } = response.data;
+
+    // Tenta extrair tabela JSON do raciocínio (última observação com array)
+    let tabela = [];
+    if (Array.isArray(raciocinio)) {
+      for (let i = raciocinio.length - 1; i >= 0; i--) {
+        const obs = raciocinio[i].observation;
+        try {
+          const parsed = JSON.parse(obs);
+          if (Array.isArray(parsed)) {
+            tabela = parsed;
+            break;
+          }
+        } catch {
+          continue;
+        }
+      }
+    }
+
+    return { resposta, tabela };
+  } catch (error) {
+    console.error('Erro ao perguntar:', error);
+    return { resposta: 'Erro ao comunicar com a API.', tabela: [] };
   }
-};
+}
