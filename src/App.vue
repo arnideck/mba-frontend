@@ -31,11 +31,11 @@ localStorage.setItem('jwt_token', jwtToken);
 const resposta = ref('');
 const raciocinio = ref('');
 
-const fazerPergunta = async (pergunta) => {
+const fazerPergunta = async (perguntar) => {
   resposta.value = 'Carregando...';
   raciocinio.value = '';
   try {
-    const { data } = await api.sendQuestion(pergunta);
+    const { data } = await api.sendQuestion(perguntar);
     resposta.value = data.resposta || 'Nenhuma resposta retornada.';
     raciocinio.value = data.raciocinio || 'Nenhum raciocínio retornado.';
     } catch (err) {
