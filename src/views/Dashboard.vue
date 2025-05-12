@@ -38,10 +38,14 @@ const handleQuestion = async (pergunta) => {
   dados.value = []
 
   try {
-    const resultado = await perguntar(pergunta)
+    //const resultado = await perguntar(pergunta)
 
-    resposta.value = resultado.resposta || 'Nenhuma resposta gerada.'
-    dados.value = Array.isArray(resultado.tabela) ? resultado.tabela : []
+    //resposta.value = resultado.resposta || 'Nenhuma resposta gerada.'
+    //dados.value = Array.isArray(resultado.tabela) ? resultado.tabela : []
+    const resultado = await perguntar(pergunta);
+
+    resposta.value = resultado?.resposta || 'Nenhuma resposta recebida.';
+    dados.value = Array.isArray(resultado?.tabela) ? resultado.tabela : [];
   } catch (e) {
     resposta.value = 'Erro ao buscar resposta.'
   } finally {
@@ -49,3 +53,4 @@ const handleQuestion = async (pergunta) => {
   }
 }
 </script>
+
