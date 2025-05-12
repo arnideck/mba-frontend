@@ -26,7 +26,9 @@ apiClient.interceptors.request.use(
 export async function perguntar(pergunta) {
   try {
     const response = await apiClient.post('/agent', { question: pergunta });
-    const { resposta, raciocinio } = response.data;
+
+    const resposta = response?.data?.resposta || 'Sem resposta.';
+    const raciocinio = response?.data?.raciocinio || [];
 
     // Tenta extrair tabela JSON do raciocínio (última observação com array)
     let tabela = [];
