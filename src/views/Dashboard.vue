@@ -21,12 +21,12 @@
 
 <script setup>
 import { ref } from 'vue'
+import { perguntar } from '@/services/api.js'
 import ChatInput from '@/components/ChatInput.vue'
 import LoadingStatus from '@/components/LoadingStatus.vue'
 import ResultChart from '@/components/ResultChart.vue'
 import ResultTable from '@/components/ResultTable.vue'
 import ExportButtons from '@/components/ExportButtons.vue'
-import { perguntar } from '@/services/api.js'
 
 const resposta = ref('')
 const dados = ref([])
