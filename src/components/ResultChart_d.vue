@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onBeforeUnmount } from 'vue';
+import { ref, watch, onBeforeUnmount, nextTick } from 'vue';
 import Chart from 'chart.js/auto';
 
 const props = defineProps({
@@ -23,10 +23,16 @@ const renderChart = () => {
     chartInstance.destroy();
   }
 
+  const ctx = canvasRef.value?.getContext('2d');
+  if (!ctx) {
+    console.warn('Canvas context not available yet.');
+    return;
+  }
+
   const labels = props.data.map(item => item.produtor_nome || item.producer_name);
   const values = props.data.map(item => parseFloat(item.total_premium));
 
-  chartInstance = new Chart(canvasRef.value, {
+  chartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels,
@@ -54,8 +60,9 @@ const renderChart = () => {
   });
 };
 
-watch(() => props.data, () => {
+watch(() => props.data, async () => {
   if (props.data?.length) {
+    await nextTick(); // Aguarda canvas ser renderizado no DOM
     renderChart();
   }
 }, { immediate: true });
