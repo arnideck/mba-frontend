@@ -39,23 +39,19 @@
       </div>
 
       <div v-if="raciocinio.length" class="mt-6">
-        <h2 class="font-semibold mb-2">Raciocinio:</h2>
-        <table class="min-w-full border border-gray-300 text-left text-sm">
-          <thead>
-            <tr class="bg-gray-100">
-              <th v-for="(col, index) in Object.keys(raciocinio[0])" :key="index" class="border px-3 py-2">
-                {{ col }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, rowIndex) in raciocinio" :key="rowIndex" class="hover:bg-gray-50">
-              <td v-for="(value, colIndex) in row" :key="colIndex" class="border px-3 py-1">
-                {{ value }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <h2 class="font-semibold mb-2">Raciocínio:</h2>
+        <div class="space-y-2">
+          <div
+            v-for="(step, index) in raciocinio"
+            :key="index"
+            class="bg-gray-50 border border-gray-200 p-3 rounded"
+          >
+            <p><strong>Ação:</strong> {{ step.action?.tool }}</p>
+            <p><strong>Input:</strong> <code>{{ step.action?.toolInput }}</code></p>
+            <p><strong>Log:</strong> {{ step.action?.log }}</p>
+            <p><strong>Observação:</strong> {{ step.observation }}</p>
+          </div>
+        </div>
       </div>
       <div v-else class="mt-6 text-gray-500 italic">
         Nenhum dado para exibir
