@@ -38,10 +38,27 @@
         Nenhum dado para exibir
       </div>
 
-
-      <div v-if="resposta" class="mt-6 p-4 bg-white shadow rounded border border-gray-200">
-        <p class="text-lg font-semibold mb-2">Raciocínio:</p>
-        <p class="text-gray-800">{{ raciocinio }}</p>
+      <div v-if="raciocinio.length" class="mt-6">
+        <h2 class="font-semibold mb-2">Raciocinio:</h2>
+        <table class="min-w-full border border-gray-300 text-left text-sm">
+          <thead>
+            <tr class="bg-gray-100">
+              <th v-for="(col, index) in Object.keys(raciocinio[0])" :key="index" class="border px-3 py-2">
+                {{ col }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, rowIndex) in raciocinio" :key="rowIndex" class="hover:bg-gray-50">
+              <td v-for="(value, colIndex) in row" :key="colIndex" class="border px-3 py-1">
+                {{ value }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-else class="mt-6 text-gray-500 italic">
+        Nenhum dado para exibir
       </div>
     </main>
   </div>
@@ -62,7 +79,7 @@ localStorage.setItem('jwt_token', jwtToken);
 const resposta = ref('');
 const tabela = ref([]);
 const carregando = ref(false);
-const raciocinio = ref('');
+const raciocinio = ref([]);
 
 const fazerPergunta = async (pergunta) => {
   raciocinio.value = '';
@@ -73,10 +90,12 @@ const fazerPergunta = async (pergunta) => {
     const resultado = await perguntar(pergunta);
     resposta.value = resultado?.resposta || 'Sem resposta.';
     tabela.value = Array.isArray(resultado?.tabela) ? resultado.tabela : [];
+    raciocinio.value = Array.isArray(resultado?.raciocinio) ? resultado.raciocinio : [];
     } catch (err) {
     console.error('Erro ao perguntar:', err);
     resposta.value = 'Erro ao processar a requisição.';
     tabela.value = [];
+    raciocinio.value = [];
   } finally {
     carregando.value = false;
   }
