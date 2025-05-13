@@ -82,7 +82,7 @@ const carregando = ref(false);
 const raciocinio = ref([]);
 
 const fazerPergunta = async (pergunta) => {
-  raciocinio.value = '';
+  raciocinio.value = [];
   resposta.value = '';
   tabela.value = [];
   carregando.value = true;
