@@ -58,6 +58,32 @@
       </div>
     </main>
   </div>
+
+  <div v-if="raciocinio.length" class="mt-6 space-y-4">
+    <h2 class="font-semibold text-lg">🧠 Raciocínio do assistente:</h2>
+
+    <div v-for="(step, index) in raciocinio" :key="index" class="flex flex-col space-y-2">
+      <div class="self-start max-w-2xl bg-blue-100 text-blue-900 p-3 rounded-lg shadow">
+        <p class="font-semibold">💭 Pensamento</p>
+        <p class="whitespace-pre-wrap">{{ step.action?.log }}</p>
+      </div>
+
+      <div class="self-start max-w-2xl bg-gray-100 text-gray-900 p-3 rounded-lg shadow">
+        <p class="font-semibold">⚙️ Ação</p>
+        <p><strong>Ferramenta:</strong> {{ step.action?.tool }}</p>
+        <p><strong>Entrada:</strong></p>
+        <pre class="bg-white text-sm text-gray-700 border p-2 rounded overflow-x-auto">
+{{ step.action?.toolInput }}
+        </pre>
+      </div>
+
+      <div class="self-end max-w-2xl bg-green-100 text-green-900 p-3 rounded-lg shadow">
+        <p class="font-semibold">✅ Observação</p>
+        <p class="whitespace-pre-wrap">{{ step.observation }}</p>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script setup>
@@ -97,4 +123,3 @@ const fazerPergunta = async (pergunta) => {
   }
 };
 </script>
-
