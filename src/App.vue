@@ -1,7 +1,68 @@
 <template>
-  <router-view />
+  <div class="min-h-screen bg-gray-100">
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <h1 class="text-2xl font-bold">MBA BI Conversacional</h1>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <ChatInput @send-question="fazerPergunta" />
+
+      <LoadingStatus :loading="carregando" />
+
+      <div v-if="resposta" class="mt-4">
+        <h2 class="font-semibold">Resposta:</h2>
+        <p class="whitespace-pre-wrap text-gray-800">{{ resposta }}</p>
+      </div>
+
+      <div v-if="tabela.length" class="mt-6">
+        <h2 class="font-semibold mb-2">Resultado:</h2>
+        <ResultTable :dados="tabela" />
+      </div>
+
+      <div v-if="resposta" class="mt-6 p-4 bg-white shadow rounded border border-gray-200">
+        <p class="text-lg font-semibold mb-2">Raciocínio:</p>
+        <p class="text-gray-800">{{ raciocinio }}</p>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script setup>
-// App.vue apenas renderiza a rota ativa (Dashboard por padrão)
+import { ref, onMounted } from 'vue';
+import ChatInput from './components/ChatInput.vue';
+import { perguntar } from './services/api.js';
+import LoadingStatus from './components/LoadingStatus.vue';
+import ResultTable from '/components/ResultTable.vue';
+import { perguntar } from './services/api.js';
+
+
+// Token JWT gerado manualmente (deve estar alinhado com o JWT_SECRET do backend)
+const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiZnJvbnRlbmQtZGV2IiwiaWF0IjoxNzE0NzE3NzYyLCJleHAiOjE3MTUzMjI1NjJ9.WA0ZVxXLtdCrZs2nHkFzN1a_AuYdYwEOOt6wH4TnKx4';
+localStorage.setItem('jwt_token', jwtToken);
+
+const resposta = ref('');
+const tabela = ref([]);
+const carregando = ref(false);
+const raciocinio = ref('');
+
+const fazerPergunta = async (pergunta) => {
+  raciocinio.value = '';
+  resposta.value = '';
+  tabela.value = [];
+  carregando.value = true;
+  try {
+    const resultado = await perguntar(pergunta);
+    resposta.value = resultado?.resposta || 'Sem resposta.';
+    tabela.value = Array.isArray(resultado?.tabela) ? resultado.tabela : [];
+    } catch (err) {
+    console.error('Erro ao perguntar:', err);
+    resposta.value = 'Erro ao processar a requisição.';
+    tabela.value = [];
+  } finally {
+    carregando.value = false;
+  }
+};
 </script>
+

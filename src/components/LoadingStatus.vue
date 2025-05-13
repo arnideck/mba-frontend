@@ -1,21 +1,17 @@
 <template>
-  <div v-if="loading" class="flex items-center justify-center py-4">
-    <div class="flex flex-col items-center">
-      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500 mb-2"></div>
-      <p class="text-gray-600">{{ message || 'Carregando...' }}</p>
-    </div>
+  <div v-if="loading" class="flex items-center space-x-2 text-blue-600 mt-4">
+    <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+    </svg>
+    <span>Processando sua consulta...</span>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  loading: {
-    type: Boolean,
-    default: false
-  },
-  message: {
-    type: String,
-    default: ''
-  }
+  loading: Boolean
 });
 </script>
+
