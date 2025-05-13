@@ -38,6 +38,14 @@
         Nenhum dado para exibir
       </div>
 
+      <ResultChart
+          v-if="tabela.length"
+          :data="tabela"
+          labelKey="producer_name" 
+          valueKey="total_premium" 
+          datasetLabel="Prêmio Total"
+        />
+
       <div v-if="raciocinio.length" class="mt-6">
         <h2 class="font-semibold mb-2">Raciocínio:</h2>
         <div class="space-y-2">
@@ -90,7 +98,7 @@
 import { ref, onMounted } from 'vue';
 import ChatInput from './components/ChatInput.vue';
 import LoadingStatus from './components/LoadingStatus.vue';
-import ResultTable from './components/ResultTable.vue';
+import ResultChart from './components/ResultChart_d.vue';
 import { perguntar } from './services/api.js';
 
 
