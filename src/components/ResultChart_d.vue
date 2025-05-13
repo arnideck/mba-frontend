@@ -1,63 +1,75 @@
 <template>
-  <div v-if="chartData && chartLabels.length && isValidData" class="mt-6">
-    <h2 class="font-semibold mb-2">📊 Gráfico</h2>
-    <Bar
-      :data="{
-        labels: chartLabels,
-        datasets: [
-          {
-            label: datasetLabel,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1,
-            data: chartData
-          }
-        ]
-      }"
-      :options="{
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'top'
-          }
-        }
-      }"
-      height="300"
-    />
+  <div style="height: 400px;">
+    <canvas ref="canvasRef"></canvas>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { Bar } from 'vue-chartjs';
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from 'chart.js';
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+import { ref, watch, onBeforeUnmount } from 'vue';
+import Chart from 'chart.js/auto';
 
 const props = defineProps({
-  data: Array,
-  labelKey: String,
-  valueKey: String,
-  datasetLabel: {
-    type: String,
-    default: 'Valores'
+  data: {
+    type: Array,
+    required: true
   }
 });
 
-const isValidData = computed(() => {
-  return Array.isArray(props.data) && props.data.length > 0 &&
-         props.data.every(item => props.labelKey in item && props.valueKey in item);
-});
+const canvasRef = ref(null);
+let chartInstance = null;
 
-const chartLabels = computed(() => props.data?.map(item => item[props.labelKey]) || []);
-const chartData = computed(() => props.data?.map(item => Number(item[props.valueKey])) || []);
+const renderChart = () => {
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
+
+  const labels = props.data.map(item => item.produtor_nome || item.producer_name);
+  const values = props.data.map(item => parseFloat(item.total_premium));
+
+  chartInstance = new Chart(canvasRef.value, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Total Premium',
+          data: values,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      plugins: {
+        legend: { display: true }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+};
+
+watch(() => props.data, () => {
+  if (props.data?.length) {
+    renderChart();
+  }
+}, { immediate: true });
+
+onBeforeUnmount(() => {
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
+});
 </script>
+
+<style scoped>
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+</style>
