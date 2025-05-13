@@ -33,7 +33,7 @@
 import { ref, onMounted } from 'vue';
 import ChatInput from './components/ChatInput.vue';
 import LoadingStatus from './components/LoadingStatus.vue';
-import ResultTable from '/components/ResultTable.vue';
+import ResultTable from './components/ResultTable.vue';
 import { perguntar } from './services/api.js';
 
 
