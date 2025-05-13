@@ -37,7 +37,7 @@
       <div v-else class="mt-6 text-gray-500 italic">
         Nenhum dado para exibir
       </div>
-      <ResultChart v-if="tabela.length" :data="tabela" datasetLabel="Resultado"/>
+      <ResultChart v-if="tabela.length" :data="tabela" />
     </main>
   </div>
 

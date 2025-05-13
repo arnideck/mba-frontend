@@ -1,82 +1,62 @@
 <template>
-  <div style="height: 400px;">
-    <canvas ref="canvasRef"></canvas>
+  <div class="w-full h-[400px]">
+    <Bar :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
 <script setup>
-import { ref, watch, onBeforeUnmount, nextTick } from 'vue';
-import Chart from 'chart.js/auto';
+import { computed } from 'vue';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js';
+import { Bar } from 'vue-chartjs';
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const props = defineProps({
   data: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const canvasRef = ref(null);
-let chartInstance = null;
+const dynamicLabelKey = computed(() => {
+  const keys = props.data.length ? Object.keys(props.data[0]) : [];
+  return keys.find(k => typeof props.data[0][k] === 'string') || keys[0];
+});
 
-const renderChart = () => {
-  if (chartInstance) {
-    chartInstance.destroy();
-  }
+const dynamicValueKey = computed(() => {
+  const keys = props.data.length ? Object.keys(props.data[0]) : [];
+  return keys.find(k => !isNaN(parseFloat(props.data[0][k]))) || keys[1];
+});
 
-  const ctx = canvasRef.value?.getContext('2d');
-  if (!ctx) {
-    console.warn('Canvas context not available yet.');
-    return;
-  }
-
-  const labels = props.data.map(item => item.produtor_nome || item.producer_name);
-  const values = props.data.map(item => parseFloat(item.total_premium));
-
-  chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Total Premium',
-          data: values,
-          backgroundColor: 'rgba(54, 162, 235, 0.6)'
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: false,
-      plugins: {
-        legend: { display: true }
+const chartData = computed(() => {
+  return {
+    labels: props.data.map(item => item[dynamicLabelKey.value]),
+    datasets: [
+      {
+        label: 'Resultado',
+        data: props.data.map(item => parseFloat(item[dynamicValueKey.value])),
+        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+        borderRadius: 8,
       },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-};
-
-watch(() => props.data, async () => {
-  if (props.data?.length) {
-    await nextTick(); // Aguarda canvas ser renderizado no DOM
-    renderChart();
-  }
-}, { immediate: true });
-
-onBeforeUnmount(() => {
-  if (chartInstance) {
-    chartInstance.destroy();
-  }
+    ],
+  };
 });
-</script>
 
-<style scoped>
-canvas {
-  width: 100% !important;
-  height: 100% !important;
-}
-</style>
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+    },
+  },
+};
+</script>
