@@ -40,53 +40,37 @@
       <ResultChart v-if="tabela.length" :data="tabela" />
     </main>
   </div>
+  <div v-if="raciocinio.length" class="mt-8">
+    <h2 class="text-lg font-semibold mb-4">🧠 Raciocínio do Assistente</h2>
+      <div class="grid gap-4">
+        <div
+          v-for="(step, index) in raciocinio"
+          :key="index"
+          class="p-4 rounded-lg border shadow bg-white"
+        >
+          <div v-if="step.action?.log">
+            <p class="font-bold text-blue-700 mb-1">💭 Pensamento:</p>
+            <p class="text-gray-800 whitespace-pre-wrap mb-2">{{ step.action.log }}</p>
+          </div>
 
-  <div v-if="raciocinio.length" class="mt-6 space-y-4">
-    <h2 class="font-semibold text-lg">🧠 Raciocínio do assistente:</h2>
+          <div v-if="step.action?.tool || step.action?.toolInput">
+            <p class="font-bold text-gray-700">⚙️ Ação:</p>
+            <p v-if="step.action.tool"><strong>Ferramenta:</strong> {{ step.action.tool }}</p>
+            <p v-if="step.action.toolInput"><strong>Consulta:</strong></p>
+            <pre v-if="step.action.toolInput" class="bg-gray-100 text-sm p-2 rounded mb-2 overflow-auto whitespace-pre-wrap">
+              {{ step.action.toolInput }}
+            </pre>
+          </div>
 
-    <div v-for="(step, index) in raciocinio" :key="index" class="flex flex-col space-y-2">
-      <div class="self-start max-w-2xl bg-blue-100 text-blue-900 p-3 rounded-lg shadow">
-        <p class="font-semibold">💭 Pensamento</p>
-        <p class="whitespace-pre-wrap">{{ step.action?.log }}</p>
+          <div v-if="step.observation">
+            <p class="font-bold text-green-700">✅ Observação:</p>
+            <p class="text-gray-800 whitespace-pre-wrap">{{ step.observation }}</p>
+          </div>
+        </div>
       </div>
-
-      <div class="self-start max-w-2xl bg-gray-100 text-gray-900 p-3 rounded-lg shadow">
-        <p class="font-semibold">⚙️ Ação</p>
-        <p><strong>Ferramenta:</strong> {{ step.action?.tool }}</p>
-        <p><strong>Entrada:</strong></p>
-        <pre class="bg-white text-sm text-gray-700 border p-2 rounded overflow-x-auto">
-{{ step.action?.toolInput }}
-        </pre>
-      </div>
-
-      <div class="self-end max-w-2xl bg-green-100 text-green-900 p-3 rounded-lg shadow">
-        <p class="font-semibold">✅ Observação</p>
-        <p class="whitespace-pre-wrap">{{ step.observation }}</p>
-      </div>
-    </div>
   </div>
 
-
-<div v-if="raciocinio.length" class="mt-8">
-  <h2 class="text-lg font-semibold mb-4">🧠 Raciocínio do Assistente</h2>
-  <div class="grid gap-4">
-    <div v-for="(step, index) in raciocinio" :key="index" class="p-4 rounded-lg border shadow bg-white">
-      <p class="font-bold text-blue-700 mb-1">💭 Pensamento:</p>
-      <p class="text-gray-800 whitespace-pre-wrap mb-2">{{ step.action?.log }}</p>
-
-      <p class="font-bold text-gray-700">⚙️ Ação:</p>
-      <p><strong>Ferramenta:</strong> {{ step.action?.tool }}</p>
-      <p><strong>Consulta:</strong></p>
-      <pre class="bg-gray-100 text-sm p-2 rounded mb-2 overflow-auto whitespace-pre-wrap">
-{{ step.action?.toolInput }}
-      </pre>
-
-      <p class="font-bold text-green-700">✅ Observação:</p>
-      <p class="text-gray-800 whitespace-pre-wrap">{{ step.observation }}</p>
-    </div>
-  </div>
-</div>
-
+  
 </template>
 
 <script setup>
