@@ -97,6 +97,7 @@ const fazerPergunta = async (pergunta) => {
   carregando.value = true;
   try {
     const resultado = await perguntar(pergunta);
+    console.log('Resposta completa da API:', resultado);
     resposta.value = resultado?.resposta || 'Sem resposta.';
     tabela.value = Array.isArray(resultado?.tabela) ? resultado.tabela : [];
     raciocinio.value = Array.isArray(resultado?.raciocinio) ? resultado.raciocinio : [];
