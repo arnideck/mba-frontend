@@ -1,5 +1,5 @@
 <template>
-  <div v-if="chartData && chartLabels.length" class="mt-6">
+  <div v-if="chartData && chartLabels.length && isValidData" class="mt-6">
     <h2 class="font-semibold mb-2">📊 Gráfico</h2>
     <Bar
       :data="{
@@ -51,6 +51,11 @@ const props = defineProps({
     type: String,
     default: 'Valores'
   }
+});
+
+const isValidData = computed(() => {
+  return Array.isArray(props.data) && props.data.length > 0 &&
+         props.data.every(item => props.labelKey in item && props.valueKey in item);
 });
 
 const chartLabels = computed(() => props.data?.map(item => item[props.labelKey]) || []);

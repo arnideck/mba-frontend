@@ -45,25 +45,6 @@
           valueKey="total_premium" 
           datasetLabel="Prêmio Total"
         />
-
-      <div v-if="raciocinio.length" class="mt-6">
-        <h2 class="font-semibold mb-2">Raciocínio:</h2>
-        <div class="space-y-2">
-          <div
-            v-for="(step, index) in raciocinio"
-            :key="index"
-            class="bg-gray-50 border border-gray-200 p-3 rounded"
-          >
-            <p><strong>Ação:</strong> {{ step.action?.tool }}</p>
-            <p><strong>Input:</strong> <code>{{ step.action?.toolInput }}</code></p>
-            <p><strong>Log:</strong> {{ step.action?.log }}</p>
-            <p><strong>Observação:</strong> {{ step.observation }}</p>
-          </div>
-        </div>
-      </div>
-      <div v-else class="mt-6 text-gray-500 italic">
-        Nenhum dado para exibir
-      </div>
     </main>
   </div>
 
