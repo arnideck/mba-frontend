@@ -15,11 +15,29 @@
         <h2 class="font-semibold">Resposta:</h2>
         <p class="whitespace-pre-wrap text-gray-800">{{ resposta }}</p>
       </div>
-
       <div v-if="tabela.length" class="mt-6">
         <h2 class="font-semibold mb-2">Resultado:</h2>
-        <ResultTable :dados="tabela" />
+        <table class="min-w-full border border-gray-300 text-left text-sm">
+          <thead>
+            <tr class="bg-gray-100">
+              <th v-for="(col, index) in Object.keys(tabela[0])" :key="index" class="border px-3 py-2">
+                {{ col }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, rowIndex) in tabela" :key="rowIndex" class="hover:bg-gray-50">
+              <td v-for="(value, colIndex) in row" :key="colIndex" class="border px-3 py-1">
+                {{ value }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <div v-else class="mt-6 text-gray-500 italic">
+        Nenhum dado para exibir
+      </div>
+
 
       <div v-if="resposta" class="mt-6 p-4 bg-white shadow rounded border border-gray-200">
         <p class="text-lg font-semibold mb-2">Raciocínio:</p>
