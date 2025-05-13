@@ -66,27 +66,6 @@
     </div>
   </div>
 
-
-<div v-if="raciocinio.length" class="mt-8">
-  <h2 class="text-lg font-semibold mb-4">🧠 Raciocínio do Assistente</h2>
-  <div class="grid gap-4">
-    <div v-for="(step, index) in raciocinio" :key="index" class="p-4 rounded-lg border shadow bg-white">
-      <p class="font-bold text-blue-700 mb-1">💭 Pensamento:</p>
-      <p class="text-gray-800 whitespace-pre-wrap mb-2">{{ step.action?.log }}</p>
-
-      <p class="font-bold text-gray-700">⚙️ Ação:</p>
-      <p><strong>Ferramenta:</strong> {{ step.action?.tool }}</p>
-      <p><strong>Consulta:</strong></p>
-      <pre class="bg-gray-100 text-sm p-2 rounded mb-2 overflow-auto whitespace-pre-wrap">
-{{ step.action?.toolInput }}
-      </pre>
-
-      <p class="font-bold text-green-700">✅ Observação:</p>
-      <p class="text-gray-800 whitespace-pre-wrap">{{ step.observation }}</p>
-    </div>
-  </div>
-</div>
-
 </template>
 
 <script setup>
