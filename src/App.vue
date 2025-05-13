@@ -37,14 +37,7 @@
       <div v-else class="mt-6 text-gray-500 italic">
         Nenhum dado para exibir
       </div>
-
-      <ResultChart
-          v-if="tabela.length"
-          :data="tabela"
-          labelKey="producer_name" 
-          valueKey="total_premium" 
-          datasetLabel="Prêmio Total"
-        />
+      <ResultChart v-if="tabela.length" :data="tabela" datasetLabel="Resultado"/>
     </main>
   </div>
 
