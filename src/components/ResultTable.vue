@@ -1,79 +1,137 @@
 <template>
-  <div class="w-full overflow-x-auto">
-    <div v-if="!data || data.length === 0" class="text-center py-8 text-gray-500">
-      Nenhum dado para exibir
-    </div>
-    <div v-else>
-      <vue-good-table
-        :columns="columns"
-        :rows="data"
-        :search-options="{
-          enabled: true,
-          placeholder: 'Pesquisar...',
-        }"
-        :pagination-options="{
-          enabled: true,
-          perPage: 10,
-          perPageDropdown: [5, 10, 20, 50],
-          dropdownAllowAll: false,
-          nextLabel: 'Próximo',
-          prevLabel: 'Anterior',
-          rowsPerPageLabel: 'Linhas por página',
-          ofLabel: 'de',
-          pageLabel: 'Página',
-          allLabel: 'Todos',
-        }"
-        styleClass="vgt-table striped bordered condensed"
+  <div class="overflow-x-auto rounded shadow border bg-white">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th
+            v-for="(coluna, index) in colunas"
+            :key="index"
+            @click="ordenarPor(coluna)"
+            class="text-left px-4 py-2 cursor-pointer select-none text-sm font-semibold text-gray-700 hover:text-blue-600"
+          >
+            {{ traduzirColuna(coluna) }}
+            <span v-if="coluna === ordenacao.coluna">
+              {{ ordenacao.crescente ? '▲' : '▼' }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(linha, i) in dadosPaginados"
+          :key="i"
+          :class="i % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
+          class="text-sm text-gray-800"
+        >
+          <td
+            v-for="(coluna, j) in colunas"
+            :key="j"
+            class="px-4 py-2 whitespace-nowrap"
+          >
+            {{ formatarValor(linha[coluna]) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div v-if="totalPaginas > 1" class="flex justify-center items-center space-x-2 mt-4 p-2">
+      <button
+        @click="paginaAtual--"
+        :disabled="paginaAtual === 1"
+        class="px-3 py-1 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
       >
-        <template #emptystate>
-          <div class="text-center py-8 text-gray-500">
-            Nenhum resultado encontrado
-          </div>
-        </template>
-      </vue-good-table>
+        Anterior
+      </button>
+      <span class="text-sm">Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+      <button
+        @click="paginaAtual++"
+        :disabled="paginaAtual === totalPaginas"
+        class="px-3 py-1 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+      >
+        Próxima
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { VueGoodTable } from 'vue-good-table-next';
-import 'vue-good-table-next/dist/vue-good-table-next.css';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
   data: {
     type: Array,
-    default: () => []
-  }
+    default: () => [],
+  },
 });
 
-const columns = ref([]);
+const colunas = computed(() => (props.data.length ? Object.keys(props.data[0]) : []));
 
-// Gerar colunas dinamicamente com base nos dados
-watch(() => props.data, (newData) => {
-  if (newData && newData.length > 0) {
-    columns.value = Object.keys(newData[0]).map(key => ({
-      label: key.charAt(0).toUpperCase() + key.slice(1),
-      field: key,
-      sortable: true
-    }));
+const ordenacao = ref({
+  coluna: null,
+  crescente: true,
+});
+
+const paginaAtual = ref(1);
+const itensPorPagina = 5;
+
+const ordenarPor = (coluna) => {
+  if (ordenacao.value.coluna === coluna) {
+    ordenacao.value.crescente = !ordenacao.value.crescente;
   } else {
-    columns.value = [];
+    ordenacao.value.coluna = coluna;
+    ordenacao.value.crescente = true;
   }
-}, { immediate: true });
+};
+
+const dadosOrdenados = computed(() => {
+  if (!ordenacao.value.coluna) return props.data;
+  return [...props.data].sort((a, b) => {
+    const valorA = a[ordenacao.value.coluna];
+    const valorB = b[ordenacao.value.coluna];
+    if (!isNaN(parseFloat(valorA)) && !isNaN(parseFloat(valorB))) {
+      return ordenacao.value.crescente
+        ? parseFloat(valorA) - parseFloat(valorB)
+        : parseFloat(valorB) - parseFloat(valorA);
+    }
+    return ordenacao.value.crescente
+      ? String(valorA).localeCompare(String(valorB))
+      : String(valorB).localeCompare(String(valorA));
+  });
+});
+
+const totalPaginas = computed(() =>
+  Math.ceil(dadosOrdenados.value.length / itensPorPagina)
+);
+
+const dadosPaginados = computed(() => {
+  const inicio = (paginaAtual.value - 1) * itensPorPagina;
+  return dadosOrdenados.value.slice(inicio, inicio + itensPorPagina);
+});
+
+const traduzirColuna = (coluna) => {
+  const mapa = {
+    producer_name: 'Produtor',
+    total_premium: 'Prêmio Total',
+    average_commission: 'Comissão Média',
+    insurance_company: 'Seguradora',
+    produto: 'Produto',
+  };
+  return mapa[coluna] || coluna;
+};
+
+const formatarValor = (valor) => {
+  if (typeof valor === 'number' || (!isNaN(valor) && valor !== '')) {
+    return parseFloat(valor).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+  return valor;
+};
 </script>
 
-<style>
-.vgt-table {
-  @apply rounded-lg shadow;
-}
-.vgt-table th {
-  @apply bg-gray-100 text-gray-700 font-semibold;
-}
-.vgt-table td {
-  @apply border-t border-gray-200;
-}
-.vgt-table.striped tbody tr:nth-of-type(odd) {
-  @apply bg-gray-50;
+<style scoped>
+th {
+  user-select: none;
 }
 </style>

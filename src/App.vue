@@ -17,29 +17,13 @@
       </div>
       <div v-if="tabela.length" class="mt-6">
         <h2 class="font-semibold mb-2">Resultado:</h2>
-        <table class="min-w-full border border-gray-300 text-left text-sm">
-          <thead>
-            <tr class="bg-gray-100">
-              <th v-for="(col, index) in Object.keys(tabela[0])" :key="index" class="border px-3 py-2">
-                {{ col }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, rowIndex) in tabela" :key="rowIndex" class="hover:bg-gray-50">
-              <td v-for="(value, colIndex) in row" :key="colIndex" class="border px-3 py-1">
-                {{ value }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ResultTable :data="tabela" />
       </div>
       <div v-else class="mt-6 text-gray-500 italic">
         Nenhum dado para exibir
       </div>
       <ResultChart v-if="tabela.length" :data="tabela" />
     </main>
-  </div>
   <div v-if="raciocinio.length" class="mt-8">
     <h2 class="text-lg font-semibold mb-4">🧠 Raciocínio do Assistente</h2>
       <div class="grid gap-4">
@@ -69,12 +53,13 @@
         </div>
       </div>
   </div>
-
+</div>
   
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import ResultTable from './components/ResultTable.vue';
 import ChatInput from './components/ChatInput.vue';
 import LoadingStatus from './components/LoadingStatus.vue';
 import ResultChart from './components/ResultChart_d.vue';
