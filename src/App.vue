@@ -24,35 +24,32 @@
       </div>
       <ResultChart v-if="tabela.length" :data="tabela" />
     </main>
-  <div v-if="raciocinio.length" class="mt-8">
-    <h2 class="text-lg font-semibold mb-4">🧠 Raciocínio do Assistente</h2>
-      <div class="grid gap-4">
-        <div
-          v-for="(step, index) in raciocinio"
-          :key="index"
-          class="p-4 rounded-lg border shadow bg-white"
-        >
-          <div v-if="step.action?.log">
-            <p class="font-bold text-blue-700 mb-1">💭 Pensamento:</p>
-            <p class="text-gray-800 whitespace-pre-wrap mb-2">{{ step.action.log }}</p>
-          </div>
+  <div v-if="Array.isArray(raciocinio) && raciocinio.length" class="mt-8">
+  <h2 class="text-lg font-semibold mb-4">🧠 Raciocínio do Assistente</h2>
+  <div class="flex flex-col gap-4">
+    <div
+      v-for="(step, index) in raciocinio"
+      :key="index"
+      class="bg-white p-4 border rounded shadow"
+    >
+      <p class="text-blue-700 font-semibold mb-2">💭 Pensamento:</p>
+      <p class="whitespace-pre-wrap text-gray-800">{{ step.action?.log || 'Sem log.' }}</p>
 
-          <div v-if="step.action?.tool || step.action?.toolInput">
-            <p class="font-bold text-gray-700">⚙️ Ação:</p>
-            <p v-if="step.action.tool"><strong>Ferramenta:</strong> {{ step.action.tool }}</p>
-            <p v-if="step.action.toolInput"><strong>Consulta:</strong></p>
-            <pre v-if="step.action.toolInput" class="bg-gray-100 text-sm p-2 rounded mb-2 overflow-auto whitespace-pre-wrap">
-              {{ step.action.toolInput }}
-            </pre>
-          </div>
+      <p class="text-gray-700 font-semibold mt-4">⚙️ Ação:</p>
+      <p><strong>Ferramenta:</strong> {{ step.action?.tool || 'N/A' }}</p>
+      <p><strong>Entrada:</strong></p>
+      <pre class="bg-gray-50 text-sm p-2 rounded whitespace-pre-wrap overflow-auto">
+{{ step.action?.toolInput || '---' }}
+      </pre>
 
-          <div v-if="step.observation">
-            <p class="font-bold text-green-700">✅ Observação:</p>
-            <p class="text-gray-800 whitespace-pre-wrap">{{ step.observation }}</p>
-          </div>
-        </div>
-      </div>
+      <p class="text-green-700 font-semibold mt-4">✅ Observação:</p>
+      <pre class="bg-green-50 p-2 rounded whitespace-pre-wrap text-gray-800 overflow-auto">
+{{ step.observation || 'Sem observação.' }}
+      </pre>
+    </div>
   </div>
+</div>
+
 </div>
   
 </template>
