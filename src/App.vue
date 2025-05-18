@@ -1,13 +1,13 @@
 <template>
   <main class="p-6 max-w-5xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">💬 Chat com Assistente Comercial</h1>
+    <h1 class="text-2xl font-bold mb-4">MBA - Assistente Comercial</h1>
 
     <ChatInput @send-question="fazerPergunta" />
 
     <LoadingStatus :loading="carregando" />
 
     <div v-if="resposta" class="mt-6 bg-green-50 border border-green-200 p-4 rounded shadow">
-      <h2 class="text-lg font-semibold mb-2">📌 Resposta:</h2>
+      <h2 class="text-lg font-semibold mb-2">Resposta:</h2>
       <p class="whitespace-pre-wrap text-gray-800">{{ resposta }}</p>
     </div>
 
@@ -20,29 +20,27 @@
       class="mt-6"
     />
 
-    <ResultChart v-if="tabela.length" :data="tabela" />
-
     <ResultTable v-if="tabela.length" :data="tabela" class="mt-6" />
 
     <div v-if="Array.isArray(raciocinio) && raciocinio.length" class="mt-8">
-      <h2 class="text-lg font-semibold mb-4">🧠 Raciocínio do Assistente</h2>
+      <h2 class="text-lg font-semibold mb-4">Raciocínio do Assistente</h2>
       <div class="flex flex-col gap-4">
         <div
           v-for="(step, index) in raciocinio"
           :key="index"
           class="bg-white p-4 border rounded shadow"
         >
-          <p class="text-blue-700 font-semibold mb-2">💭 Pensamento:</p>
+          <p class="text-blue-700 font-semibold mb-2">Pensamento:</p>
           <p class="whitespace-pre-wrap text-gray-800">{{ step.action?.log || 'Sem log.' }}</p>
 
-          <p class="text-gray-700 font-semibold mt-4">⚙️ Ação:</p>
+          <p class="text-gray-700 font-semibold mt-4">Ação:</p>
           <p><strong>Ferramenta:</strong> {{ step.action?.tool || 'N/A' }}</p>
           <p><strong>Entrada:</strong></p>
           <pre class="bg-gray-50 text-sm p-2 rounded whitespace-pre-wrap overflow-auto">
             {{ step.action?.toolInput || '---' }}
           </pre>
 
-          <p class="text-green-700 font-semibold mt-4">✅ Observação:</p>
+          <p class="text-green-700 font-semibold mt-4">Observação:</p>
           <pre class="bg-green-50 p-2 rounded whitespace-pre-wrap text-gray-800 overflow-auto">
             {{ step.observation || 'Sem observação.' }}
           </pre>
@@ -84,7 +82,7 @@ const fazerPergunta = async (texto) => {
     console.log('📦 Resposta completa da API:', resultado)
     console.log('💬 resultado:', resultado);
     console.log('🔎 resposta:', resultado.resposta);
-    
+
     const ehRespostaAutomatica = resultado?.resposta?.includes('Final Answer');
 
       if (ehRespostaAutomatica && Array.isArray(resultado?.tabela) && resultado.tabela.length > 0) {

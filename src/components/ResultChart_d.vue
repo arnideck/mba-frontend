@@ -68,9 +68,9 @@ function renderCharts() {
           legend: {
             display: chart.type === 'pie'
           }
-        },
-        indexAxis: chart.type === 'bar' ? 'y' : 'x'
+        }
       }
+      
     };
 
     const instance = new Chart(ctx, config);
