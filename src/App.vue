@@ -11,6 +11,8 @@
       <p class="whitespace-pre-wrap text-gray-800">{{ resposta }}</p>
     </div>
 
+    <ResultTable v-if="tabela.length" :data="tabela" class="mt-6" />
+
     <ResultChart
       v-if="tabela.length"
       :data="tabela"
@@ -19,8 +21,6 @@
       :datasetLabel="valueKey"
       class="mt-6"
     />
-
-    <ResultTable v-if="tabela.length" :data="tabela" class="mt-6" />
 
     <div v-if="Array.isArray(raciocinio) && raciocinio.length" class="mt-8">
       <h2 class="text-lg font-semibold mb-4">Raciocínio do Assistente</h2>
