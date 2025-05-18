@@ -47,7 +47,7 @@ export async function perguntar(pergunta) {
       }
     }
 
-    return { resposta, tabela };
+    return { resposta, tabela, raciocinio };
   } catch (error) {
     console.error('Erro ao perguntar:', error);
     return { resposta: 'Erro ao comunicar com a API.', tabela: [] };
