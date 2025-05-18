@@ -55,6 +55,10 @@ import ResultTable from './components/ResultTable.vue'
 import ResultChart from './components/ResultChart.vue'
 import { perguntar } from './services/api.js'
 
+// Token JWT gerado manualmente (deve estar alinhado com o JWT_SECRET do backend)
+const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiZnJvbnRlbmQtZGV2IiwiaWF0IjoxNzE0NzE3NzYyLCJleHAiOjE3MTUzMjI1NjJ9.WA0ZVxXLtdCrZs2nHkFzN1a_AuYdYwEOOt6wH4TnKx4';
+localStorage.setItem('jwt_token', jwtToken);
+
 const resposta = ref('')
 const raciocinio = ref([])
 const tabela = ref([])
