@@ -10,13 +10,15 @@
     </div>
 
     <ResultChart
-      v-if="tabela.length && valueKey"
+      v-if="tabela.length"
       :data="tabela"
       :labelKey="labelKey"
       :valueKey="valueKey"
       :datasetLabel="valueKey"
       class="mt-6"
     />
+
+    <ResultChart v-if="tabela.length" :data="tabela" />
 
     <ResultTable v-if="tabela.length" :data="tabela" class="mt-6" />
 
@@ -35,12 +37,12 @@
           <p><strong>Ferramenta:</strong> {{ step.action?.tool || 'N/A' }}</p>
           <p><strong>Entrada:</strong></p>
           <pre class="bg-gray-50 text-sm p-2 rounded whitespace-pre-wrap overflow-auto">
-{{ step.action?.toolInput || '---' }}
+            {{ step.action?.toolInput || '---' }}
           </pre>
 
           <p class="text-green-700 font-semibold mt-4">✅ Observação:</p>
           <pre class="bg-green-50 p-2 rounded whitespace-pre-wrap text-gray-800 overflow-auto">
-{{ step.observation || 'Sem observação.' }}
+            {{ step.observation || 'Sem observação.' }}
           </pre>
         </div>
       </div>
