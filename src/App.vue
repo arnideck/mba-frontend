@@ -73,12 +73,14 @@ const fazerPergunta = async (texto) => {
   valueKey.value = ''
 
   try {
-    const { data } = await perguntar(texto)
-    console.log('📦 Resposta completa da API:', data)
+    const resultado = await perguntar(texto)
+    console.log('📦 Resposta completa da API:', resultado)
+    console.log('💬 resultado:', resultado);
+    console.log('🔎 resposta:', resultado.resposta);
 
-    resposta.value = data.resposta || 'Sem resposta.'
-    tabela.value = data.tabela || []
-    raciocinio.value = data.raciocinio || []
+    resposta.value = resultado.resposta || 'Sem resposta.'
+    tabela.value = resultado.tabela || []
+    raciocinio.value = resultado.raciocinio || []
     console.log('🧠 Raciocínio recebido:', raciocinio.value)
 
     if (tabela.value.length > 0) {
