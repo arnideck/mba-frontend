@@ -4,6 +4,8 @@
 
     <ChatInput @send-question="fazerPergunta" />
 
+    <LoadingStatus :loading="carregando" />
+
     <div v-if="resposta" class="mt-6 bg-green-50 border border-green-200 p-4 rounded shadow">
       <h2 class="text-lg font-semibold mb-2">📌 Resposta:</h2>
       <p class="whitespace-pre-wrap text-gray-800">{{ resposta }}</p>
@@ -52,6 +54,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import LoadingStatus from './components/LoadingStatus.vue';
 import ChatInput from './components/ChatInput.vue'
 import ResultTable from './components/ResultTable.vue'
 import ResultChart from './components/ResultChart_d.vue'
@@ -66,6 +69,7 @@ const raciocinio = ref([])
 const tabela = ref([])
 const labelKey = ref('')
 const valueKey = ref('')
+const carregando = ref(false);
 
 const fazerPergunta = async (texto) => {
   resposta.value = ''
@@ -73,15 +77,14 @@ const fazerPergunta = async (texto) => {
   tabela.value = []
   labelKey.value = ''
   valueKey.value = ''
+  carregando.value = true;
 
   try {
     const resultado = await perguntar(texto)
     console.log('📦 Resposta completa da API:', resultado)
     console.log('💬 resultado:', resultado);
     console.log('🔎 resposta:', resultado.resposta);
-
-    //resposta.value = resultado.resposta || 'Sem resposta.'
-
+    
     const ehRespostaAutomatica = resultado?.resposta?.includes('Final Answer');
 
       if (ehRespostaAutomatica && Array.isArray(resultado?.tabela) && resultado.tabela.length > 0) {
@@ -104,6 +107,8 @@ const fazerPergunta = async (texto) => {
   } catch (error) {
     console.error('Erro ao buscar resposta:', error)
     resposta.value = 'Erro ao buscar resposta.'
+  }finally {
+    carregando.value = false;
   }
 }
 </script>
