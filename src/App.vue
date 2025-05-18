@@ -80,7 +80,18 @@ const fazerPergunta = async (texto) => {
     console.log('💬 resultado:', resultado);
     console.log('🔎 resposta:', resultado.resposta);
 
-    resposta.value = resultado.resposta || 'Sem resposta.'
+    //resposta.value = resultado.resposta || 'Sem resposta.'
+
+    const ehRespostaAutomatica = resultado?.resposta?.includes('Final Answer');
+
+      if (ehRespostaAutomatica && Array.isArray(resultado?.tabela) && resultado.tabela.length > 0) {
+        resposta.value = '📊 Aqui estão os dados solicitados:';
+      } else if (ehRespostaAutomatica && resultado?.raciocinio?.length > 0) {
+        resposta.value = '🧠 Veja como o assistente chegou à conclusão abaixo:';
+      } else {
+        resposta.value = resultado?.resposta || 'Nenhuma informação retornada.';
+      }
+
     tabela.value = resultado.tabela || []
     raciocinio.value = resultado.raciocinio || []
     console.log('🧠 Raciocínio recebido:', raciocinio.value)
