@@ -54,7 +54,7 @@
 import { ref } from 'vue'
 import ChatInput from './components/ChatInput.vue'
 import ResultTable from './components/ResultTable.vue'
-import ResultChart from './components/ResultChart.vue'
+import ResultChart from './components/ResultChart_d.vue'
 import { perguntar } from './services/api.js'
 
 // Token JWT gerado manualmente (deve estar alinhado com o JWT_SECRET do backend)
