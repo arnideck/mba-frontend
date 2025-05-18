@@ -6,7 +6,7 @@
       class="bg-white p-4 rounded-lg shadow-md"
     >
       <h3 class="text-lg font-semibold mb-2">{{ chart.title }}</h3>
-      <canvas :ref="el => chartRefs[index] = el" height="300"></canvas>
+      <canvas :ref="el => chartRefs[index] = el" height="180"></canvas>
     </div>
   </div>
 </template>
